@@ -33,9 +33,12 @@ class MainActivity : AppCompatActivity() {
     private fun playGame(grid: GridView, lista: MutableList<BotonColor>) {
         var order = mutableListOf<Int>()
         var lose = false
+        var positionSelected = 0
+        var positionTested : Int
         var viewAtPosition : View
         var image : ImageView
         do {
+            positionTested = 0
             order.add(Random.nextInt(4))
             for (i in order){
                 viewAtPosition = grid.getChildAt(i) as View
@@ -52,11 +55,27 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            for (i in order){
-
+            while (positionTested < order.size && !lose){
+                grid.setOnItemClickListener() { parent, view, position, id ->
+                    positionSelected=position
+                    viewAtPosition = grid.getChildAt(position) as View
+                    image = viewAtPosition.findViewById(R.id.image)
+                    GlobalScope.launch {
+                        runOnUiThread {
+                            image.setImageResource(lista[position].colorSelected)
+                        }
+                    }
+                    Thread.sleep(1000)
+                    GlobalScope.launch {
+                        runOnUiThread {
+                            image.setImageResource(lista[position].color)
+                        }
+                    }
+                    if (positionSelected != order[positionTested]){
+                        lose = true
+                    }
+                }
             }
-
-
         }while (!lose)
     }
 
