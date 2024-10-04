@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.GridView
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         grid.setOnItemClickListener { parent, view, position, id ->
 
-            // Inicia una coroutine para manejar los cambios en la interfaz de usuario sin bloquear el hilo principal
+
             lifecycleScope.launch {
                 if (!block) {
                     block = true
@@ -47,21 +48,20 @@ class MainActivity : AppCompatActivity() {
                         positionTested = 0
                         order.add(Random.nextInt(4))
 
-                        // Recorre el orden de colores
+
                         for (i in order) {
                             viewAtPosition = grid.getChildAt(i) as View
                             image = viewAtPosition.findViewById(R.id.image)
 
-                            // Cambia el color de la imagen al color "encendido"
-                            image.setImageResource(lista[i].colorLight)
-                            image.invalidate()  // Fuerza la actualización de la vista
 
-                            // Pausa durante 1 segundo (1000 ms) sin bloquear el UI thread
+                            image.setImageResource(lista[i].colorLight)
+                            image.invalidate()
+
                             delay(1000)
 
-                            // Vuelve a cambiar al color "apagado"
+
                             image.setImageResource(lista[i].color)
-                            image.invalidate()  // Fuerza la actualización de la vista
+                            image.invalidate()
                             delay(1000)
                         }
                         turnOfPlayer = true
@@ -71,12 +71,10 @@ class MainActivity : AppCompatActivity() {
                         viewAtPosition = grid.getChildAt(position) as View
                         image = viewAtPosition.findViewById(R.id.image)
                         image.setImageResource(lista[position].colorSelected)
-                        image.invalidate()  // Fuerza la actualización de la vista
+                        image.invalidate()
 
-                        // Pausa durante 1 segundo (1000 ms) sin bloquear el UI thread
                         delay(1000)
 
-                        // Vuelve a cambiar al color "apagado"
                         image.setImageResource(lista[position].color)
                         image.invalidate()
 
@@ -84,6 +82,9 @@ class MainActivity : AppCompatActivity() {
                             positionTested++
                             if (positionTested == order.size) {
                                 turnOfPlayer = false
+                            }else{
+                                Toast.makeText(this@MainActivity, "¡¡¡HAS PERDIDO!!!", Toast.LENGTH_LONG).show()
+                                finish()
                             }
                         }
                         block = false
