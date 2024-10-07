@@ -19,10 +19,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        var turnOfPlayer = false
-        var order = mutableListOf<Int>()
+        val order = mutableListOf<Int>()
         var points = 0
-        var lose = false
         var block = false
         var positionSelected = 0
         var positionTested = 0
@@ -60,7 +58,6 @@ class MainActivity : AppCompatActivity() {
                         if (positionSelected == order[positionTested]) {
                             positionTested++
                             if (positionTested == order.size) {
-                                turnOfPlayer = false
                                 points++
                                 strPoints.setText("Puntuación : "+points)
                                 Toast.makeText(this@MainActivity, "¡¡¡Pasas a la sigente ronda!!!", Toast.LENGTH_SHORT).show()

@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
-import androidx.annotation.ContentView
-import androidx.lifecycle.findViewTreeViewModelStoreOwner
 
 class AdapterBotonColor (context : Context,val layout: Int,val listaBoton : MutableList<BotonColor>):
     ArrayAdapter<BotonColor>(context,layout,listaBoton) {
