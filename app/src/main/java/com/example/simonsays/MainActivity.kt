@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         val order = mutableListOf<Int>()
         var points = 0
         var block = false
-        var positionSelected = 0
+        var positionSelected : Int
         var positionTested = 0
         var viewAtPosition: View
         var image: ImageView
