@@ -14,15 +14,36 @@
         android:textSize="20dp"
         android:textStyle="bold"
         android:padding="20dp"/>
+
     <GridView
         android:id="@+id/grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:gravity="center"
+        android:layout_margin="20dp"
+        android:layout_gravity="center_horizontal"
         android:numColumns="2">
     </GridView>
+
+    <TextView
+        android:id="@+id/puntuacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:text="Puntación : 0"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/boton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="JUGAR"
+        android:textStyle="bold"
+        android:padding="20dp"
+        />
 
 
 </LinearLayout>

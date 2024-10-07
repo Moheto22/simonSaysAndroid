@@ -2,15 +2,14 @@ package com.example.simonsays
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.GridView
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
-
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -22,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         var turnOfPlayer = false
         var order = mutableListOf<Int>()
+        var points = 0
         var lose = false
         var block = false
         var positionSelected = 0
@@ -29,6 +29,9 @@ class MainActivity : AppCompatActivity() {
         var viewAtPosition: View
         var image: ImageView
 
+        var strPoints = findViewById<TextView>(R.id.puntuacion)
+
+        val boton = findViewById<Button>(R.id.boton)
 
         val lista = generateRandomBotons()
 
@@ -40,112 +43,77 @@ class MainActivity : AppCompatActivity() {
 
         grid.setOnItemClickListener { parent, view, position, id ->
 
-
             lifecycleScope.launch {
                 if (!block) {
                     block = true
-                    if (!turnOfPlayer) {
-                        positionTested = 0
-                        order.add(Random.nextInt(4))
-
-
-                        for (i in order) {
-                            viewAtPosition = grid.getChildAt(i) as View
-                            image = viewAtPosition.findViewById(R.id.image)
-
-
-                            image.setImageResource(lista[i].colorLight)
-                            image.invalidate()
-
-                            delay(1000)
-
-
-                            image.setImageResource(lista[i].color)
-                            image.invalidate()
-                            delay(1000)
-                        }
-                        turnOfPlayer = true
-                        block = false
-                    } else {
                         positionSelected = position
                         viewAtPosition = grid.getChildAt(position) as View
                         image = viewAtPosition.findViewById(R.id.image)
                         image.setImageResource(lista[position].colorSelected)
                         image.invalidate()
 
-                        delay(1000)
+                        delay(400)
 
                         image.setImageResource(lista[position].color)
                         image.invalidate()
 
-                        if (positionSelected != order[positionTested]) {
+                        if (positionSelected == order[positionTested]) {
                             positionTested++
                             if (positionTested == order.size) {
                                 turnOfPlayer = false
-                            }else{
-                                Toast.makeText(this@MainActivity, "¡¡¡HAS PERDIDO!!!", Toast.LENGTH_LONG).show()
-                                finish()
+                                points++
+                                strPoints.setText("Puntuación : "+points)
+                                Toast.makeText(this@MainActivity, "¡¡¡Pasas a la sigente ronda!!!", Toast.LENGTH_SHORT).show()
+                                positionTested = 0
+                                order.add(Random.nextInt(4))
+                                showOrder(order,grid,lista)
                             }
+                        }else{
+                            Toast.makeText(this@MainActivity, "¡¡¡HAS PERDIDO!!!", Toast.LENGTH_LONG).show()
+                            strPoints.setText("Puntuación : 0")
+                            order.clear()
+                            points = 0
+                            positionTested = 0
+                            strPoints.visibility = View.GONE
+                            boton.visibility = View.VISIBLE
                         }
                         block = false
-                    }
 
                 }
 
             }
         }
+        boton.setOnClickListener(){
+            lifecycleScope.launch{
+                positionTested = 0
+                order.add(Random.nextInt(4))
+                showOrder(order,grid,lista)
+                boton.visibility = View.GONE
+                strPoints.visibility = View.VISIBLE
+            }
+
+        }
 
     }
-
-
-    private fun playGame(grid: GridView, lista: MutableList<BotonColor>) {
-        var order = mutableListOf<Int>()
-        var lose = false
-        var positionSelected = 0
-        var positionTested: Int
+    private suspend fun showOrder(order : MutableList<Int>, grid : GridView ,lista: MutableList<BotonColor>){
         var viewAtPosition: View
-        var image: ImageView
-        do {
-            positionTested = 0
-            order.add(Random.nextInt(4))
-            for (i in order) {
-                viewAtPosition = grid.getChildAt(i) as View
-                image = viewAtPosition.findViewById(R.id.image)
-                GlobalScope.launch {
-                    runOnUiThread {
-                        image.setImageResource(lista[i].colorLight)
-                    }
-                }
-                Thread.sleep(1000)
-                GlobalScope.launch {
-                    runOnUiThread {
-                        image.setImageResource(lista[i].color)
-                    }
-                }
-            }
+        var image : ImageView
+        for (i in order) {
+            viewAtPosition = grid.getChildAt(i) as View
+            image = viewAtPosition.findViewById(R.id.image)
 
-            while (positionTested < order.size && !lose) {
-                grid.setOnItemClickListener() { parent, view, position, id ->
-                    positionSelected = position
-                    viewAtPosition = grid.getChildAt(position) as View
-                    image = viewAtPosition.findViewById(R.id.image)
-                    GlobalScope.launch {
-                        runOnUiThread {
-                            image.setImageResource(lista[position].colorSelected)
-                        }
-                    }
-                    Thread.sleep(1000)
-                    GlobalScope.launch {
-                        runOnUiThread {
-                            image.setImageResource(lista[position].color)
-                        }
-                    }
-                    if (positionSelected != order[positionTested]) {
-                        lose = true
-                    }
-                }
-            }
-        } while (!lose)
+
+            image.setImageResource(lista[i].colorLight)
+            image.invalidate()
+
+            delay(400)
+
+
+            image.setImageResource(lista[i].color)
+            image.invalidate()
+            delay(200)
+
+        }
     }
 
     private fun generateRandomBotons(): MutableList<BotonColor> {
