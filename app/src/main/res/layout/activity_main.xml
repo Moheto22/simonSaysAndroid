@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Simon Says"
+        android:layout_margin="20dp"
         android:textSize="20dp"
         android:background="@drawable/borde_rojo"
         app:backgroundTint="@null"
@@ -38,7 +39,12 @@
         android:text="Puntación : 0"
         android:textSize="20dp"
         android:textStyle="bold"
-        android:visibility="gone"/>
+        android:padding="20dp"
+        android:visibility="gone"
+        android:background="@drawable/borde_rojo"
+        app:backgroundTint="@null"
+        android:textColor="#FFFFFF"
+        />
 
     <Button
         android:id="@+id/boton"
